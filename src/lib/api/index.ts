@@ -20,3 +20,12 @@ export type {
   CreatePromptTemplateInput,
   UpdatePromptTemplateInput,
 } from './prompt-templates'
+
+export { authApi } from './auth'
+export type {
+  LoginPayload,
+  LoginResponse,
+  RefreshResponse,
+  LogoutResponse,
+} from './auth'
+
