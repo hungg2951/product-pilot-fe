@@ -358,25 +358,25 @@ export function ManageImagesDialog({
                     {allSelected ? "Clear selection" : "Select all"}
                   </Button>
 
-                  {selectedImageIds.size > 0 && (
+                  {/* {selectedImageIds.size > 0 && (
                     <span className="text-xs font-medium text-primary">
                       {selectedImageIds.size} selected
                     </span>
-                  )}
+                  )} */}
                 </div>
 
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => setConfirmDeleteOpen(true)}
-                  disabled={
-                    selectedImageIds.size === 0 || deleteMutation.isPending
-                  }
-                  className="h-8 text-xs gap-1.5 font-medium"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                  <span>Delete selected</span>
-                </Button>
+                {selectedImageIds.size > 0 && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => setConfirmDeleteOpen(true)}
+                    disabled={deleteMutation.isPending}
+                    className="h-8 text-xs gap-1.5 font-medium"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    <span>Delete {selectedImageIds.size} selected</span>
+                  </Button>
+                )}
               </div>
 
               {/* Gallery Content */}
@@ -401,7 +401,7 @@ export function ManageImagesDialog({
                     </p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                     {images.map((img) => {
                       const isSelected = selectedImageIds.has(img.id);
                       return (
