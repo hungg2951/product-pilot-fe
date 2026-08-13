@@ -65,4 +65,33 @@ export const productsApi = {
     });
     return response.data;
   },
+
+  async getProductImages(id: string): Promise<ProductImage[]> {
+    const response = await axiosInstance.get(
+      `/products/${encodeURIComponent(id)}/images`,
+    );
+    return response.data;
+  },
+
+  async uploadProductImage(id: string, file: File): Promise<ProductImage> {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await axiosInstance.post(
+      `/products/${encodeURIComponent(id)}/images`,
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } },
+    );
+    return response.data;
+  },
+
+  async deleteProductImages(
+    id: string,
+    mediaIds: string[],
+  ): Promise<{ deletedMediaIds: string[] }> {
+    const response = await axiosInstance.delete(
+      `/products/${encodeURIComponent(id)}/images`,
+      { data: { mediaIds } },
+    );
+    return response.data;
+  },
 };

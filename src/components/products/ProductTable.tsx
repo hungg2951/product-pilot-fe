@@ -17,7 +17,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GenerateContentDialog } from "./GenerateContentDialog";
-import { Sparkles, ImageOff, Package } from "lucide-react";
+import { ManageImagesDialog } from "./ManageImagesDialog";
+import { Sparkles, ImagePlus, ImageOff, Package } from "lucide-react";
 import type { Product } from "@/lib/api";
 
 const columnHelper = createColumnHelper<Product>();
@@ -56,9 +57,18 @@ export function ProductTable({ products, isLoading }: ProductTableProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
+  const [manageImagesOpen, setManageImagesOpen] = useState(false);
+  const [selectedProductForImages, setSelectedProductForImages] =
+    useState<Product | null>(null);
+
   const handleGenContent = (product: Product) => {
     setSelectedProduct(product);
     setDialogOpen(true);
+  };
+
+  const handleManageImages = (product: Product) => {
+    setSelectedProductForImages(product);
+    setManageImagesOpen(true);
   };
 
   const columns = [
@@ -130,9 +140,18 @@ export function ProductTable({ products, isLoading }: ProductTableProps) {
     columnHelper.display({
       id: "actions",
       header: "",
-      size: 140,
+      size: 210,
       cell: (info) => (
-        <div className="flex justify-end">
+        <div className="flex justify-end items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 text-xs h-8 hover:border-primary/40 hover:text-primary"
+            onClick={() => handleManageImages(info.row.original)}
+          >
+            <ImagePlus className="h-3.5 w-3.5" />
+            Upload
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -293,15 +312,26 @@ export function ProductTable({ products, isLoading }: ProductTableProps) {
                     {formatDate(product.createdAt)}
                   </span>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-1.5 text-xs h-7 mt-1 hover:border-primary/40 hover:text-primary"
-                  onClick={() => handleGenContent(product)}
-                >
-                  <Sparkles className="h-3 w-3" />
-                  Gen content
-                </Button>
+                <div className="flex items-center gap-2 mt-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5 text-xs h-7 hover:border-primary/40 hover:text-primary"
+                    onClick={() => handleManageImages(product)}
+                  >
+                    <ImagePlus className="h-3 w-3" />
+                    Upload
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5 text-xs h-7 hover:border-primary/40 hover:text-primary"
+                    onClick={() => handleGenContent(product)}
+                  >
+                    <Sparkles className="h-3 w-3" />
+                    Gen content
+                  </Button>
+                </div>
               </div>
             </div>
           );
@@ -312,6 +342,12 @@ export function ProductTable({ products, isLoading }: ProductTableProps) {
         product={selectedProduct}
         open={dialogOpen}
         onOpenChange={setDialogOpen}
+      />
+
+      <ManageImagesDialog
+        product={selectedProductForImages}
+        open={manageImagesOpen}
+        onOpenChange={setManageImagesOpen}
       />
     </>
   );
