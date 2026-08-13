@@ -7,6 +7,7 @@ export interface Shop {
   id_shopify: string
   client_id: string
   secret_key: string
+  default_prompt_template_id?: string | null
   created_at: string
   updated_at: string
 }
@@ -25,6 +26,7 @@ export interface UpdateShopInput {
   id_shopify?: string
   client_id?: string
   secret_key?: string
+  default_prompt_template_id?: string | null
 }
 
 export const shopsApi = {

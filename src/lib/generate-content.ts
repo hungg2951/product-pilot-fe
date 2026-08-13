@@ -9,10 +9,11 @@ export interface GeneratedProductContent {
 export async function generateProductContent(
   productId: string,
   title: string,
+  promptTemplateId?: string,
 ): Promise<GeneratedProductContent> {
   const response = await axiosInstance.post(
     `/products/${encodeURIComponent(productId)}/generate-content`,
-    { title },
+    { title, promptTemplateId },
   );
   return response.data;
 }

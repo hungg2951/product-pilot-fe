@@ -13,3 +13,10 @@ export type {
   CreateShopInput,
   UpdateShopInput,
 } from './shops'
+
+export { promptTemplatesApi } from './prompt-templates'
+export type {
+  PromptTemplate,
+  CreatePromptTemplateInput,
+  UpdatePromptTemplateInput,
+} from './prompt-templates'

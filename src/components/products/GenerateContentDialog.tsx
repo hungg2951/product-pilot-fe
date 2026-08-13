@@ -11,8 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { productsApi } from "@/lib/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { productsApi, shopsApi } from "@/lib/api";
 import { useShopStore } from "@/store/shop-store";
 import { generateProductContent } from "@/lib/generate-content";
 import { Loader2, Sparkles } from "lucide-react";
@@ -31,6 +31,14 @@ export function GenerateContentDialog({
 }: GenerateContentDialogProps) {
   const queryClient = useQueryClient();
   const activeShopId = useShopStore((s) => s.activeShopId);
+
+  const { data: shops = [] } = useQuery({
+    queryKey: ["shops"],
+    queryFn: shopsApi.getShops,
+    enabled: open,
+  });
+
+  const activeShop = shops.find((s) => s.id === activeShopId);
 
   const [description, setDescription] = useState("");
   const [metaDescription, setMetaDescription] = useState("");
@@ -56,7 +64,11 @@ export function GenerateContentDialog({
       setIsGenerating(true);
       setHasGenerated(false);
       try {
-        const content = await generateProductContent(product.id, product.title);
+        const content = await generateProductContent(
+          product.id,
+          product.title,
+          activeShop?.default_prompt_template_id ?? undefined,
+        );
         if (cancelled) return;
         setDescription(content.description);
         setMetaDescription(content.metaDescription);
@@ -76,7 +88,7 @@ export function GenerateContentDialog({
     return () => {
       cancelled = true;
     };
-  }, [open, product]);
+  }, [open, product, activeShop?.default_prompt_template_id]);
 
   // Update mutation
   const updateMutation = useMutation({

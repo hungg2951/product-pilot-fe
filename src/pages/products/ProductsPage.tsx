@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { productsApi } from "@/lib/api";
 import { useShopStore } from "@/store/shop-store";
 import { ProductTable } from "@/components/products/ProductTable";
+import { PromptTemplateDialog } from "@/components/products/PromptTemplateDialog";
 import { Button } from "@/components/ui/button";
 import {
   Loader2,
@@ -12,6 +13,7 @@ import {
   ChevronRight,
   Search,
   X,
+  Settings,
 } from "lucide-react";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { Input } from "@/components/ui/input";
@@ -90,6 +92,8 @@ export function ProductsPage() {
   // Is syncing = refetching the currently visible page (not the initial load)
   const isSyncing = isFetching && !isLoading;
 
+  const [promptDialogOpen, setPromptDialogOpen] = useState(false);
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -108,25 +112,38 @@ export function ProductsPage() {
           </div>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleSync}
-          disabled={isSyncing}
-          className="gap-2 h-9 px-4 font-medium"
-        >
-          {isSyncing ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Syncing...
-            </>
-          ) : (
-            <>
-              <RefreshCw className="h-4 w-4" />
-              Sync products
-            </>
-          )}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setPromptDialogOpen(true)}
+            className="h-9 w-9"
+            aria-label="Manage prompt templates"
+            title="Manage prompt templates"
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleSync}
+            disabled={isSyncing}
+            className="gap-2 h-9 px-4 font-medium"
+          >
+            {isSyncing ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Syncing...
+              </>
+            ) : (
+              <>
+                <RefreshCw className="h-4 w-4" />
+                Sync products
+              </>
+            )}
+          </Button>
+        </div>
       </div>
 
       {/* Search bar */}
@@ -192,6 +209,11 @@ export function ProductsPage() {
           </Button>
         </div>
       )}
+
+      <PromptTemplateDialog
+        open={promptDialogOpen}
+        onOpenChange={setPromptDialogOpen}
+      />
     </div>
   );
 }
